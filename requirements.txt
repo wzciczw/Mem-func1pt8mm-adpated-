@@ -1,0 +1,10 @@
+torch>=2.1
+torchvision>=0.16
+numpy>=1.24,<2.0
+yacs>=0.1.8
+yacs-stubgen>=0.3.1
+python-dotenv>=1.0
+einops>=0.7
+timm>=1.0
+open-clip-torch>=2.24
+filelock>=3.12

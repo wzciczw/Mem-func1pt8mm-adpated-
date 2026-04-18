@@ -1,0 +1,25 @@
+# Model weights and large binary files (upload to HuggingFace separately)
+model_zoo/subjects/*/model.pth
+model_zoo/subjects/*/coords.npy
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
