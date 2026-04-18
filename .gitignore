@@ -1,6 +1,5 @@
-# Model weights and large binary files (upload to HuggingFace separately)
-model_zoo/subjects/*/model.pth
-model_zoo/subjects/*/coords.npy
+# Model weights — hosted on HuggingFace, not tracked in git
+model_zoo/
 
 # Python
 __pycache__/

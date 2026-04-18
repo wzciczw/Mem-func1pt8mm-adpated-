@@ -6,33 +6,35 @@
 
 - **训练代码来源**：[Algonauts 2023 Challenge — huze 方案](https://github.com/huzeyann/MemoryEncodingModel)（MemoryEncodingModel）。
 - **数据格式迁移**：在原始 `nsdgeneral` 空间的基础上，迁移训练至 **`func1pt8mm`** 数据格式（1.8 mm 各向同性功能像空间），以兼容更高分辨率的 fMRI 数据。
-- **预训练权重**：模型权重即将上传至 [Hugging Face Hub](https://huggingface.co/)，上传后可通过模型卡链接直接下载。
+- **预训练权重**：模型权重托管于 [Hugging Face Hub — wzcfantasy/huze_func1pt8mm](https://huggingface.co/wzcfantasy/huze_func1pt8mm)，可直接下载使用。
 
 ---
 
 ## 目录结构
 
 ```
-Encoder/
-├── infer.py                  # 单张图像推理入口脚本
-├── run_encoder_infer.sh      # 封装好的推理启动脚本
-├── requirements.txt          # Python 依赖
-├── architecture/             # 模型架构定义
-│   ├── encoder_model.py      # 推理封装（BrainEncoder）
-│   ├── models.py             # 核心模型（MemVoxelWiseEncodingModel 等）
+Encoder/                          ← GitHub 仓库（仅代码）
+├── infer.py                      # 单张图像推理入口脚本
+├── run_encoder_infer.sh          # 封装好的推理启动脚本
+├── requirements.txt              # Python 依赖
+├── architecture/                 # 模型架构定义
+│   ├── encoder_model.py          # 推理封装（BrainEncoder）
+│   ├── models.py                 # 核心模型（MemVoxelWiseEncodingModel 等）
 │   ├── backbone.py / blocks.py / ...
 │   └── third_party/
 │       └── facebookresearch_dinov2_main/   # DINOv2 视觉骨干
-└── model_zoo/
+└── model_zoo/                    ← 不在 GitHub 中，需从 HuggingFace 下载
     └── subjects/
-        ├── subj01/           # 各被试的权重与配置
-        │   ├── config.yaml
-        │   ├── coords.npy    # 体素空间坐标
-        │   └── model.pth
+        ├── subj01/
+        │   ├── config.yaml       # 模型配置
+        │   ├── coords.npy        # 体素空间坐标
+        │   └── model.pth         # 权重（约 1.1 GB）
         ├── subj02/
         ├── subj05/
         └── subj07/
 ```
+
+> **注**：`model_zoo/` 目录已加入 `.gitignore`，GitHub 仓库中不包含权重文件。权重统一托管于 HuggingFace，见下方下载说明。
 
 ---
 
@@ -97,13 +99,29 @@ python infer.py \
 
 ## 预训练权重下载
 
-模型权重即将上传至 Hugging Face Hub，敬请关注。上传完成后可通过以下方式下载：
+权重托管于 [wzcfantasy/huze_func1pt8mm](https://huggingface.co/wzcfantasy/huze_func1pt8mm)，包含 subj01、subj02、subj05、subj07 四名被试的权重（每个约 1.1 GB）。
 
 ```bash
-# 示例（链接待更新）
-huggingface-cli download <organization>/<model-repo> \
-    --local-dir model_zoo/subjects/
+# 方式一：使用 huggingface_hub Python API
+pip install huggingface_hub
+python3 -c "
+from huggingface_hub import snapshot_download
+snapshot_download(
+    repo_id='wzcfantasy/huze_func1pt8mm',
+    local_dir='.',
+    allow_patterns='model_zoo/**',
+)
+"
 ```
+
+```bash
+# 方式二：使用 huggingface-cli（需安装 huggingface_hub[cli]）
+huggingface-cli download wzcfantasy/huze_func1pt8mm \
+    --include 'model_zoo/**' \
+    --local-dir .
+```
+
+下载完成后，`model_zoo/` 目录应位于本仓库根目录下，结构与上方目录树一致。
 
 ---
 
